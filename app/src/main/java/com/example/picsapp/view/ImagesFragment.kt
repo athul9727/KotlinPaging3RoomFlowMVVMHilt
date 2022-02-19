@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -91,6 +92,31 @@ class ImagesFragment : Fragment()  , ImageClickListener {
             }
         }
 
+//        recAdapter.addLoadStateListener { loadState ->
+//
+//            /**
+//            This code is taken from https://medium.com/@yash786agg/jetpack-paging-3-0-android-bae37a56b92d
+//             **/
+//
+//            if (loadState.refresh is LoadState.Loading){
+//                progressBar.visibility = View.VISIBLE
+//            }
+//            else{
+//                progressBar.visibility = View.GONE
+//
+//                // getting the error
+//                val error = when {
+//                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+//                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+//                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+//                    else -> null
+//                }
+//                errorState?.let {
+//                    Toast.makeText(this, it.error.message, Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
+
     }
 
     private fun removeBackButton() {
@@ -103,6 +129,9 @@ class ImagesFragment : Fragment()  , ImageClickListener {
         mDataBinding.recycleview.layoutManager = LinearLayoutManager(activity)
         mDataBinding.recycleview.setHasFixedSize(true)
         mDataBinding.recycleview.setItemViewCacheSize(12)
+        recAdapter.withLoadStateFooter(
+            footer = RecLoadStateAdapter { recAdapter.retry() }
+        )
         mDataBinding.recycleview.adapter = recAdapter
         mDataBinding.togglebutton.setChecked(true);
 
